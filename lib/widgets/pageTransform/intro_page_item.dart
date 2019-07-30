@@ -132,9 +132,8 @@ class IntroNewsItem extends StatelessWidget {
   }
 
   String _getImageUrl(url,height,width){
-
-    return 'http://104.131.18.84/notice/tim.php?src=$url&h=$height&w=$width';
-
+    return item.imageUrl;
+//    return 'http://104.131.18.84/notice/tim.php?src=$url&h=$height&w=$width';
   }
 
   @override
@@ -197,7 +196,7 @@ class IntroNewsItem extends StatelessWidget {
     );
   }
 
-
+  //打开详情
   void openDetail(BuildContext context) {
     Navigator.of(context).push(FadeInRoute(
         widget: DetailPage(

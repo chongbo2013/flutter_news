@@ -45,7 +45,7 @@ class DetailPage extends StatelessWidget{
             children: <Widget>[
              new Hero(
                  tag: _title,
-                 child: _getImageNetwork(Functions.getImgResizeUrl(_img,250,''))
+                 child: _getImageNetwork(_getImageUrl(_img,250,''))
              ),
               _getBody(_title,_date,_description,_origin,context),
             ],
@@ -54,7 +54,10 @@ class DetailPage extends StatelessWidget{
       ),
     );
   }
-
+  String _getImageUrl(url,height,width){
+    return _img;
+//    return Functions.getImgResizeUrl(_img,250,'');
+  }
   Widget _getImageNetwork(url){
 
     try{

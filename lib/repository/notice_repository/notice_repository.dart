@@ -5,6 +5,8 @@ import 'package:FlutterNews/repository/notice_repository/model/notice.dart';
 import 'package:FlutterNews/support/conection/api.dart';
 import 'package:flutter/services.dart';
 
+import 'model/dogInfo.dart';
+
 abstract class NoticeRepository{
   Future<List<Notice>> loadNews(String category, int page);
   Future<List<Notice>> loadNewsRecent();
@@ -29,9 +31,9 @@ class NoticeRepositoryImpl implements NoticeRepository{
 
   Future<List<Notice>> loadDogLists() async {
 
-    String data = await rootBundle.loadString('assets/data/json');
-    Map<String, dynamic> _result = json.decode(data);
-
+    String data = await rootBundle.loadString('assets/data/dog.json');
+    final Map result = json.decode(data);
+    return result['dogs'].map<Notice>( (notice) => new Notice.fromMapDog(notice)).toList();
 
   }
 

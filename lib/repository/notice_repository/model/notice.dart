@@ -4,7 +4,7 @@ import 'package:FlutterNews/pages/datail/detail.dart';
 import 'package:flutter/material.dart';
 
 class Notice extends StatelessWidget{
-
+  var id;
   var img;
   var title;
   var date;
@@ -12,10 +12,11 @@ class Notice extends StatelessWidget{
   var category;
   var link;
   var origin;
-
+  //学习标记
+  var learnMark=0;
   AnimationController animationController;
 
-  Notice(this.img,this.title,this.date,this.description,this.category,this.link,this.origin);
+  Notice(this.id,this.img,this.title,this.date,this.description,this.category,this.link,this.origin,this.learnMark);
 
   Notice.fromMap(Map<String, dynamic>  map) :
         img = map['url_img'],
@@ -25,6 +26,16 @@ class Notice extends StatelessWidget{
         category = map['category'],
         link = map['link'],
         origin = map['origin'];
+
+  Notice.fromMapDog(Map<String, dynamic>  map) :
+        img = map['imageUrl'],
+        title = map['name'],
+        description = map['description'],
+        date = '2019-07-28 22:57:00',
+        category='category',
+        link = 'link',
+        origin = 'origin'
+        ;
 
 
   BuildContext _context;
@@ -53,7 +64,7 @@ class Notice extends StatelessWidget{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           new Hero(
-            tag: title, child: _getImgWidget(Functions.getImgResizeUrl(img, 200, 200)),
+            tag: title, child:_getImgWidget(Functions.getImgResizeUrl(img, 200, 200)),
           ),
           _getColumText(title,date,description)
         ],
