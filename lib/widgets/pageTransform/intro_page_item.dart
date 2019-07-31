@@ -12,7 +12,8 @@ class IntroNews {
       this.description,
       this.date,
       this.link,
-      this.origin);
+      this.origin,
+      this.learnMark);
 
   final String title;
   final String category;
@@ -21,7 +22,7 @@ class IntroNews {
   final String description;
   final String link;
   final String origin;
-
+  final int learnMark;
   IntroNews.fromNotice(Notice notice) :
         title = notice.title,
         category = notice.category,
@@ -29,7 +30,9 @@ class IntroNews {
         description = notice.description,
         date = notice.date,
         link = notice.link,
-        origin = notice.origin;
+        origin = notice.origin,
+        learnMark=notice.learnMark;
+
 }
 
 class IntroNewsItem extends StatelessWidget {
@@ -63,19 +66,19 @@ class IntroNewsItem extends StatelessWidget {
 
   _buildTextContainer(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final categoryText = _applyTextEffects(
-      translationFactor: 300.0,
-      child: new Text(
-        item.category,
-        style: textTheme.caption.copyWith(
-          color: Colors.white70,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 2.0,
-          fontSize: 14.0,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
+//    final categoryText = _applyTextEffects(
+//      translationFactor: 300.0,
+//      child: new Text(
+//        item.category,
+//        style: textTheme.caption.copyWith(
+//          color: Colors.white70,
+//          fontWeight: FontWeight.bold,
+//          letterSpacing: 2.0,
+//          fontSize: 14.0,
+//        ),
+//        textAlign: TextAlign.center,
+//      ),
+//    );
 
     final titleText = _applyTextEffects(
       translationFactor: 200.0,
@@ -97,7 +100,7 @@ class IntroNewsItem extends StatelessWidget {
       child: new Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          categoryText,
+//          categoryText,
           titleText,
         ],
       ),

@@ -39,7 +39,7 @@ class DBHelper {
         var img = testIterator.current.img;
         var title = testIterator.current.title;
         var description = testIterator.current.description;
-        var learnMark = testIterator.current.learnMark;
+        var learnMark = 0;
         txn.rawInsert(
             'INSERT INTO dogs(imageUrl, title,description,learnMark) VALUES("$img", "$title", "$description", "$learnMark")');
       }

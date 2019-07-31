@@ -36,9 +36,7 @@ class _MyAppState extends State<NewsApp> {
     Flavors.configure(Flavor.PROD);
     injectRepository(Injector.appInstance);
     injectBloc(Injector.appInstance);
-    SharedPreferenceUtil.getbool("isFirst")
-        .then((isFrist) => initFirst(isFrist))
-        .catchError(onFirstError);
+
   }
 
   void onComplete() {
@@ -54,7 +52,6 @@ class _MyAppState extends State<NewsApp> {
           .then((notices) => NewsApp.dbHelp.addAllNoticeToDB(notices))
           .whenComplete(onComplete)
           .catchError(onFirstError);
-      SharedPreferenceUtil.savebool("isFirst", false);
     } else {
       NewsApp.dbHelp.initializeUserDB().whenComplete(onComplete);
     }
@@ -79,9 +76,7 @@ class _MyAppState extends State<NewsApp> {
     await SpUtil.getInstance();
     isFirstInit=SpUtil.getBool("FirstInit");
     showBlackPage=false;
-    if (!SpUtil.getBool("FirstInit")) {
-      SpUtil.putBool("FirstInit", true);
-    }
+    initFirst(!isFirstInit);
     //重新刷新
     setState(() {
 
@@ -93,7 +88,8 @@ class _MyAppState extends State<NewsApp> {
   Widget build(BuildContext context) {
     if(showBlackPage)
       return  new Stack();
-    if (isFirstInit) {
+    if (!isFirstInit) {
+      SpUtil.putBool("FirstInit", true);
       return getGuide();
     }
     return getHomeWidget();
