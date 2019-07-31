@@ -22,7 +22,7 @@ class NewsView extends StatelessWidget {
                 _getListViewWidget(streams,dispatcher),
                 _buildConnectionError(streams,dispatcher),
                 _getProgress(streams),
-                _getListCategory(streams,dispatcher),
+
               ],
             )
         );
@@ -65,7 +65,7 @@ class NewsView extends StatelessWidget {
                     if (index == 0) {
 
                       return Container(
-                        margin: EdgeInsets.only(top: 50.0),
+//                        margin: EdgeInsets.only(top: 50.0),
                         child: news[index],
                       );
 
@@ -112,34 +112,7 @@ class NewsView extends StatelessWidget {
     );
   }
 
-  Widget _getListCategory(NewsStreams streams,dispatcher) {
-    return StreamBuilder(
-      stream: streams.categoriesName.get,
-      builder: (_,snapshot){
 
-        if(snapshot.hasData){
-          List<String> list = snapshot.data;
-          return AnimatedOpacity(
-            opacity: 1,
-            duration: Duration(milliseconds: 300),
-            child: CustomTab(
-              itens: list,
-              tabSelected: (index) {
-                dispatcher(ClickCategory()..data = index);
-              },
-            ),
-          );
-        }else{
-          return AnimatedOpacity(
-            opacity: 0,
-            duration: Duration(milliseconds: 300),
-          );
-        }
-
-      },
-    );
-
-  }
 
   Future<Null> myRefresh(dispatcher) async {
     dispatcher(LoadNews());

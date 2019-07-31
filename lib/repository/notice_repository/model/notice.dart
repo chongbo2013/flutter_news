@@ -20,7 +20,7 @@ class Notice extends StatelessWidget{
 
   Notice.fromMap(Map<String, dynamic>  map) :
         img = map['url_img'],
-        title = map['tittle'],
+        title = map['title'],
         date = map['date'],
         description = map['description'],
         category = map['category'],
@@ -29,13 +29,14 @@ class Notice extends StatelessWidget{
 
   Notice.fromMapDog(Map<String, dynamic>  map) :
         img = map['imageUrl'],
-        title = map['name'],
+        title = map['title'],
         description = map['description'],
         date = '2019-07-28 22:57:00',
         category='category',
         link = 'link',
-        origin = 'origin'
-        ;
+        origin = 'origin',
+        id = map['id'],
+        learnMark =map['learnMark'];
 
 
   BuildContext _context;
@@ -64,7 +65,7 @@ class Notice extends StatelessWidget{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           new Hero(
-            tag: title, child:_getImgWidget(Functions.getImgResizeUrl(img, 200, 200)),
+            tag: title, child:_getImgWidget(img),
           ),
           _getColumText(title,date,description)
         ],

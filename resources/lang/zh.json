@@ -1,8 +1,8 @@
 {
-  "tab_recentes":"高亮",
-  "tab_noticias":"新闻",
+  "tab_recentes":"猜猜狗",
+  "tab_noticias":"狗品种",
   "tab_sobre":"关于",
-  "hint_busca":"新闻搜索",
+  "hint_busca":"搜索",
   "text_error":"连接错误",
   "text_tentar_novamente":"重新连接",
   "cat_geral":"日常",
@@ -11,7 +11,7 @@
   "cat_entretenimento":"娱乐",
   "cat_saude":"健康",
   "cat_negocios":"商业",
-  "erro_busca":"没有找到新闻 :-(",
+  "erro_busca":"没有找到狗狗 :-(",
   "text_info":"应用程序开发非营利性，旨在探索框架Flutter的潜力。",
   "text_copy":"链接已复制。",
   "text_fechar":"关"

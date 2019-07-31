@@ -13,7 +13,7 @@ class DBHelper {
         onCreate: (Database db, int version) async {
       // When creating the db, create the table
       await db.execute(
-          'CREATE TABLE dogs (id INTEGER PRIMARY KEY, description TEXT, title TEXT, img TEXT, learnMark INTEGER)');
+          'CREATE TABLE dogs (id INTEGER PRIMARY KEY, description TEXT, title TEXT, imageUrl TEXT, learnMark INTEGER default 0 )');
     });
     return database;
   }
@@ -41,7 +41,7 @@ class DBHelper {
         var description = testIterator.current.description;
         var learnMark = testIterator.current.learnMark;
         txn.rawInsert(
-            'INSERT INTO dogs(img, title,description,learnMark) VALUES("$img", "$title", "$description", "$learnMark")');
+            'INSERT INTO dogs(imageUrl, title,description,learnMark) VALUES("$img", "$title", "$description", "$learnMark")');
       }
     });
 
@@ -70,13 +70,13 @@ class DBHelper {
       var description = notice.description;
       var learnMark = notice.learnMark;
       await txn.rawInsert(
-          'INSERT INTO dogs(img, title,description,learnMark) VALUES("$img", "$title", "$description", "$learnMark")');
+          'INSERT INTO dogs(imageUrl, title,description,learnMark) VALUES("$img", "$title", "$description", "$learnMark")');
     });
 
     //Close the database
     await db.close();
   }
-  queryAll() async {
+  queryAll(int page,int pageSize) async {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, "dogs.db");
 
@@ -89,13 +89,10 @@ class DBHelper {
       print("Error $e");
     }
 
-    List<Map> list = await db.query('dogs', columns: [
-      'id',
-      'img',
-      'title',
-      'description',
-      'learnMark'
-    ]);
+    int pageOffset=page*pageSize;
+    List<Map> list = await db.rawQuery(
+        'SELECT * FROM dogs Limit "$pageSize" Offset "$pageOffset"');
+
 
 
     // Close the database
@@ -103,7 +100,7 @@ class DBHelper {
 
     return list;
   }
-  authLogin(String inputUsername, String inputPassword) async {
+  querySearch(String query) async {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, "dogs.db");
 
@@ -116,8 +113,10 @@ class DBHelper {
       print("Error $e");
     }
 
+    List args=List<String>();
+    args.add("%"+query+"%");
     List<Map> list = await db.rawQuery(
-        'SELECT * FROM dogs WHERE username = "$inputUsername" AND password = "$inputPassword"');
+        'SELECT * FROM dogs WHERE title like ? ',args);
 
 
     // Close the database

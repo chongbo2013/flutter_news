@@ -5,10 +5,11 @@ import 'package:FlutterNews/repository/notice_repository/model/notice.dart';
 import 'package:FlutterNews/support/conection/api.dart';
 import 'package:flutter/services.dart';
 
+import '../../main.dart';
 import 'model/dogInfo.dart';
 
 abstract class NoticeRepository{
-  Future<List<Notice>> loadNews(String category, int page);
+  Future<List<Notice>> loadNews(int page);
   Future<List<Notice>> loadNewsRecent();
   Future<List<Notice>> loadDogLists();
   Future<List<Notice>> loadSearch(String query);
@@ -19,9 +20,14 @@ class NoticeRepositoryImpl implements NoticeRepository{
 
   NoticeRepositoryImpl(this._api);
 
-  Future<List<Notice>> loadNews(String category, int page) async {
-    final Map result = await _api.get("/notice/news/$category/$page");
-    return result['data']['news'].map<Notice>( (notice) => new Notice.fromMap(notice)).toList();
+  Future<List<Notice>> loadNews( int page) async {
+    final List<Map> result =await NewsApp.dbHelp.queryAll(page,10);
+    List<Notice> noties=List<Notice>();
+    for (Map value in result) {
+      Notice notice=new Notice.fromMapDog(value);
+      noties.add(notice);
+    }
+    return noties;
   }
 
   Future<List<Notice>> loadNewsRecent() async {
@@ -38,14 +44,17 @@ class NoticeRepositoryImpl implements NoticeRepository{
   }
 
   Future<List<Notice>> loadSearch(String query) async {
-
-    final Map result = await _api.get("/notice/search/$query");
-
-    if(result['op']){
-      return result['data'].map<Notice>( (notice) => new Notice.fromMap(notice)).toList();
-    }else{
+    final List<Map> result =await NewsApp.dbHelp.querySearch(query);
+    if(result!=null&&result.isEmpty){
       return List();
     }
+    List<Notice> noties=List<Notice>();
+    for (Map value in result) {
+      Notice notice=new Notice.fromMapDog(value);
+      noties.add(notice);
+    }
+    return noties;
+
   }
 
 }

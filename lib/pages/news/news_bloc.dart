@@ -12,24 +12,18 @@ class NewsBloc extends BlocBase<NewsStreams,NewsEvents>{
   final NoticeRepository repository;
 
   int _page = 0;
-  int _currentCategory = 0;
-  List<String> _categories = ['geral','sports','technology','entertainment','health','business'];
-  List<String> _categoriesNames = List();
+
+
   List<Notice> _newsInner = List();
   bool _carregando = false;
 
   NewsBloc(this.repository){
-    _categoriesNames.add(getString("cat_geral"));
-    _categoriesNames.add(getString("cat_esporte"));
-    _categoriesNames.add(getString("cat_tecnologia"));
-    _categoriesNames.add(getString("cat_entretenimento"));
-    _categoriesNames.add(getString("cat_saude"));
-    _categoriesNames.add(getString("cat_negocios"));
+
   }
 
   @override
   void initView() {
-    streams.categoriesName.set(_categoriesNames);
+
     _load(false);
   }
 
@@ -45,7 +39,7 @@ class NewsBloc extends BlocBase<NewsStreams,NewsEvents>{
     }
 
     if(event is ClickCategory){
-      _currentCategory = event.data;
+
       cleanList();
       _load(false);
     }
@@ -68,9 +62,9 @@ class NewsBloc extends BlocBase<NewsStreams,NewsEvents>{
 
       streams.progress.set(true);
 
-      String category = _categories[_currentCategory];
 
-      repository.loadNews(category, _page)
+
+      repository.loadNews( _page)
           .then((news) => _showNews(news,isMore))
           .catchError(_showImplError);
 

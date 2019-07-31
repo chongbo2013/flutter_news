@@ -20,12 +20,13 @@ import 'package:sqflite/sqflite.dart';
 void main() => runApp(new NewsApp());
 
 class NewsApp extends StatefulWidget {
+  static final dbHelp = new DBHelper();
   @override
   _MyAppState createState() => new _MyAppState();
 }
 
 class _MyAppState extends State<NewsApp> {
-  static final dbHelp = new DBHelper();
+
   MyLocalizationsDelegate myLocation = const MyLocalizationsDelegate();
 
   @override
@@ -47,15 +48,15 @@ class _MyAppState extends State<NewsApp> {
 
   void initFirst(bool isFrist) {
     if (isFrist == null || isFrist) {
-      dbHelp
+      NewsApp.dbHelp
           .initializeUserDB()
           .then((database) => addAllInfo2Db(database))
-          .then((notices) => dbHelp.addAllNoticeToDB(notices))
+          .then((notices) => NewsApp.dbHelp.addAllNoticeToDB(notices))
           .whenComplete(onComplete)
           .catchError(onFirstError);
       SharedPreferenceUtil.savebool("isFirst", false);
     } else {
-      dbHelp.initializeUserDB().whenComplete(onComplete);
+      NewsApp.dbHelp.initializeUserDB().whenComplete(onComplete);
     }
   }
 
