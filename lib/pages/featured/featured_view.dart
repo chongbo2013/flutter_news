@@ -9,10 +9,14 @@ import 'package:bsev/bsev.dart';
 import 'package:flutter/material.dart';
 
 class FeaturedView extends StatelessWidget {
+
+   Function(EventsBase) currentDispatcher;
   @override
   Widget build(BuildContext context) {
     return Bsev<FeaturedBloc, FeaturedStreams>(
         builder: (context, dispatcher, streams) {
+
+          currentDispatcher=dispatcher;
       return Stack(
         children: <Widget>[
           new Stack(
@@ -91,4 +95,11 @@ class FeaturedView extends StatelessWidget {
           }
         });
   }
+
+  void reload(){
+    if(currentDispatcher!=null){
+      currentDispatcher(LoadFeatured());
+    }
+  }
+
 }

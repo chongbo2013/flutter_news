@@ -1,3 +1,4 @@
+import 'package:FlutterNews/pages/featured/dogFeaturedView.dart';
 import 'package:FlutterNews/pages/featured/featured_view.dart';
 import 'package:FlutterNews/pages/home/home_bloc.dart';
 import 'package:FlutterNews/pages/home/home_streams.dart';
@@ -38,19 +39,27 @@ class HomeView extends StatelessWidget {
     );
   }
 
+  static DogFeaturedView featuredView=null;
+
   Widget _getContent(HomeStreams streams){
+
     return StreamBuilder(
         stream: streams.tabPosition.get,
         initialData: 0,
         builder:  (BuildContext context, AsyncSnapshot snapshot){
 
           var position = snapshot.hasData ? snapshot.data:0;
-
-          switch(position){
-            case 0:return FeaturedView();break;
-            case 1: return NewsView();break;
-            case 2: return Info();
+          if(position==0){
+            if(featuredView==null)
+            featuredView=DogFeaturedView();
+            return featuredView;
+          }else if(position==1){
+            return NewsView();
+          }else if(position==2){
+            return Info();
           }
+          return Container();
+
 
         }
     );

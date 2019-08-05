@@ -76,6 +76,35 @@ class DBHelper {
     //Close the database
     await db.close();
   }
+
+  Future<bool> updateNoticeToDB(int id,int mark) async {
+    //Get database path
+    var databasesPath = await getDatabasesPath();
+    var path = join(databasesPath, "dogs.db");
+
+    //Try opening (will work if it exists)
+    Database db;
+    try {
+      db = await openDatabase(path, readOnly: false);
+      print("Create Account is Opening database");
+    } catch (e) {
+      print("Error $e");
+    }
+
+    //Insert some records in a transaction;
+    await db.transaction((txn) async {
+      List args=List<int>();
+      args.add(mark);
+      args.add(id);
+      await txn.rawUpdate(
+          'update dogs set learnMark=? where id=? ',args);
+    });
+
+    //Close the database
+    await db.close();
+    return true;
+  }
+
   queryAll(int page,int pageSize) async {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, "dogs.db");
@@ -100,6 +129,30 @@ class DBHelper {
 
     return list;
   }
+
+  queryLearnAll() async {
+    var databasesPath = await getDatabasesPath();
+    var path = join(databasesPath, "dogs.db");
+
+    // try opening (will work if it exists)
+    Database db;
+    try {
+      db = await openDatabase(path, readOnly: false);
+      print("Login Opening database");
+    } catch (e) {
+      print("Error $e");
+    }
+
+
+    List<Map> list = await db.rawQuery(
+        'SELECT * FROM dogs WHERE learnMark == 0 or learnMark == 1');
+
+    // Close the database
+    await db.close();
+
+    return list;
+  }
+
   querySearch(String query) async {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, "dogs.db");

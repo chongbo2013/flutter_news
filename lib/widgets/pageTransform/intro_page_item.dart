@@ -1,19 +1,15 @@
 import 'package:FlutterNews/pages/datail/detail.dart';
+import 'package:FlutterNews/pages/home/home_view.dart';
 import 'package:FlutterNews/repository/notice_repository/model/notice.dart';
 import 'package:FlutterNews/support/util/FadeInRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import '../../main.dart';
 import 'page_transformer.dart';
 
 class IntroNews {
-  IntroNews(this.title,
-      this.category,
-      this.imageUrl,
-      this.description,
-      this.date,
-      this.link,
-      this.origin,
-      this.learnMark);
+  IntroNews(this.title, this.category, this.imageUrl, this.description,
+      this.date, this.link, this.origin, this.learnMark, this.id);
 
   final String title;
   final String category;
@@ -23,20 +19,36 @@ class IntroNews {
   final String link;
   final String origin;
   final int learnMark;
-  IntroNews.fromNotice(Notice notice) :
-        title = notice.title,
+  final int id;
+
+  IntroNews.fromNotice(Notice notice)
+      : title = notice.title,
         category = notice.category,
         imageUrl = notice.img,
         description = notice.description,
         date = notice.date,
         link = notice.link,
         origin = notice.origin,
-        learnMark=notice.learnMark;
-
+        learnMark = notice.learnMark,
+        id = notice.id;
 }
 
-class IntroNewsItem extends StatelessWidget {
+class IntroNewsItem extends StatefulWidget {
   IntroNewsItem({
+    @required this.item,
+    @required this.pageVisibility,
+  });
+
+  final IntroNews item;
+  final PageVisibility pageVisibility;
+
+  @override
+  IntroNewsItemState createState() =>
+      IntroNewsItemState(item: item, pageVisibility: pageVisibility);
+}
+
+class IntroNewsItemState extends State<IntroNewsItem> {
+  IntroNewsItemState({
     @required this.item,
     @required this.pageVisibility,
   });
@@ -66,29 +78,57 @@ class IntroNewsItem extends StatelessWidget {
 
   _buildTextContainer(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-//    final categoryText = _applyTextEffects(
-//      translationFactor: 300.0,
-//      child: new Text(
-//        item.category,
-//        style: textTheme.caption.copyWith(
-//          color: Colors.white70,
-//          fontWeight: FontWeight.bold,
-//          letterSpacing: 2.0,
-//          fontSize: 14.0,
-//        ),
-//        textAlign: TextAlign.center,
-//      ),
-//    );
-
     final titleText = _applyTextEffects(
       translationFactor: 200.0,
       child: new Padding(
         padding: const EdgeInsets.only(top: 16.0),
         child: new Text(
           item.title,
-          style: textTheme.title
-              .copyWith(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 18.0),
+          style: textTheme.title.copyWith(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0),
           textAlign: TextAlign.center,
+        ),
+      ),
+    );
+
+    return new Positioned(
+      bottom: 76.0,
+      left: 32.0,
+      right: 32.0,
+      child: new Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          titleText,
+        ],
+      ),
+    );
+  }
+
+  //显示答案
+  void showAnswer() {
+    setState(() {
+      showTishi = false;
+      showAnster = true;
+    });
+  }
+
+  _buildShowContainer(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    Widget renshiWidget = new Text(
+      '提示',
+      style: textTheme.title.copyWith(
+          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0),
+      textAlign: TextAlign.center,
+    );
+
+    final renshiText = _applyTextEffects(
+      translationFactor: 200.0,
+      child: new Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: FlatButton(
+          onPressed: showAnswer,
+          child: renshiWidget,
         ),
       ),
     );
@@ -99,19 +139,83 @@ class IntroNewsItem extends StatelessWidget {
       right: 32.0,
       child: new Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-//          categoryText,
-          titleText,
-        ],
+        children: [renshiText],
       ),
     );
   }
 
-  Widget _getImageNetwork(url){
 
-    try{
-      if(url != '') {
+  void refreshTab(){
+    HomeView.featuredView.reload();
 
+  }
+  _buildDogContainer(BuildContext context) {
+
+
+
+
+    final renshiText = _applyTextEffects(
+      translationFactor: 200.0,
+      child: new Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: FlatButton(
+          onPressed: () {
+            NewsApp.dbHelp.updateNoticeToDB(item.id, 2).whenComplete(refreshTab);
+          },
+          textColor: Theme.of(context).primaryColor,
+          color: Color(0xFF82B1FF),
+          child: Text('认识'),
+        ),
+      ),
+    );
+
+
+
+    final buquedingText = _applyTextEffects(
+      translationFactor: 200.0,
+      child: new Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: FlatButton(
+          onPressed: () {
+            NewsApp.dbHelp.updateNoticeToDB(item.id, 0).whenComplete(refreshTab);
+          },
+          textColor: Theme.of(context).primaryColor,
+          color: Color(0xFF82B1FF),
+          child: Text('不认识'),
+        ),
+      ),
+    );
+
+
+    final burenshiText = _applyTextEffects(
+      translationFactor: 200.0,
+      child: new Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: FlatButton(
+          onPressed: () {
+            NewsApp.dbHelp.updateNoticeToDB(item.id, 1).whenComplete(refreshTab);
+          },
+            textColor: Theme.of(context).primaryColor,
+            color: Color(0xFF82B1FF),
+          child: Text('不确定'),
+        ),
+      ),
+    );
+
+    return new Positioned(
+      bottom: 26.0,
+      left: 16.0,
+      right: 16.0,
+      child: new Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [renshiText, buquedingText, burenshiText],
+      ),
+    );
+  }
+
+  Widget _getImageNetwork(url) {
+    try {
+      if (url != '') {
         return ClipRRect(
           borderRadius: new BorderRadius.circular(8.0),
           child: new FadeInImage.assetNetwork(
@@ -124,24 +228,23 @@ class IntroNewsItem extends StatelessWidget {
             ),
           ),
         );
-      }else{
+      } else {
         return new Image.asset('assets/place_holder_2.jpg');
       }
-
-    }catch(e){
+    } catch (e) {
       return new Image.asset('assets/place_holder_2.jpg');
     }
-
   }
 
-  String _getImageUrl(url,height,width){
+  String _getImageUrl(url, height, width) {
     return item.imageUrl;
 //    return 'http://104.131.18.84/notice/tim.php?src=$url&h=$height&w=$width';
   }
 
+  bool showTishi = true, showAnster = false;
+
   @override
   Widget build(BuildContext context) {
-
     final imageOverlayGradient = new DecoratedBox(
       decoration: new BoxDecoration(
         gradient: new LinearGradient(
@@ -164,15 +267,29 @@ class IntroNewsItem extends StatelessWidget {
         elevation: 4.0,
         borderRadius: new BorderRadius.circular(8.0),
         child: InkWell(
-          onTap: (){
+          onTap: () {
             openDetail(context);
           },
           child: new Stack(
             fit: StackFit.expand,
             children: [
-              new Hero(tag: item.title,child: _getImageNetwork(_getImageUrl(item.imageUrl, 400, ''))),
+              new Hero(
+                  tag: item.title,
+                  child:
+                      _getImageNetwork(_getImageUrl(item.imageUrl, 400, ''))),
               _getOverlayGradient(),
-              _buildTextContainer(context),
+              new Visibility(
+                child: _buildTextContainer(context),
+                visible: showAnster,
+              ),
+              new Visibility(
+                child: _buildDogContainer(context),
+                visible: showAnster,
+              ),
+              new Visibility(
+                child: _buildShowContainer(context),
+                visible: showTishi,
+              ),
             ],
           ),
         ),
@@ -181,9 +298,9 @@ class IntroNewsItem extends StatelessWidget {
   }
 
   _getOverlayGradient() {
-
     return ClipRRect(
-      borderRadius: new BorderRadius.only(bottomLeft: Radius.circular(8.0),bottomRight: Radius.circular(8.0)),
+      borderRadius: new BorderRadius.only(
+          bottomLeft: Radius.circular(8.0), bottomRight: Radius.circular(8.0)),
       child: new DecoratedBox(
         decoration: new BoxDecoration(
           gradient: new LinearGradient(
@@ -202,13 +319,7 @@ class IntroNewsItem extends StatelessWidget {
   //打开详情
   void openDetail(BuildContext context) {
     Navigator.of(context).push(FadeInRoute(
-        widget: DetailPage(
-            item.imageUrl,
-            item.title,
-            item.date,
-            item.description,
-            item.category,
-            item.link,
-            item.origin)));
+        widget: DetailPage(item.imageUrl, item.title, item.date,
+            item.description, item.category, item.link, item.origin)));
   }
 }

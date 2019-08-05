@@ -35,16 +35,40 @@ class FeaturedBloc extends BlocBase<FeaturedStreams, FeaturedEvents> {
         .loadDogLists()
         .then((news) => _showNews(news))
         .catchError(_showImplError);
-
-
   }
 
-
+  Map<int, Notice> areadyUses = new Map();
 
   //显示卡片
   _showNews(List<Notice> news) {
-    streams.progress.set(false);
-    streams.noticies.set(news);
+    //选择一个 不认识，或者不熟悉的，进行显示
+    bool isAdd=false;
+    if (news != null) {
+      for (Notice value in news) {
+        if (!areadyUses.containsKey(value.id)) {
+          areadyUses.putIfAbsent(value.id, () {
+            value;
+          });
+
+
+          List<Notice> finalList=new List();
+          finalList.add(value);
+
+          streams.progress.set(false);
+          streams.noticies.set(finalList);
+          streams.errorConnection.set(false);
+          isAdd=true;
+          return;
+        }
+      }
+    }
+
+
+      streams.errorConnection.set(true);
+      streams.progress.set(false);
+
+
+
   }
 
   //显示错误

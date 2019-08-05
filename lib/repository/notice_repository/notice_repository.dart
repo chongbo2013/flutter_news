@@ -36,11 +36,13 @@ class NoticeRepositoryImpl implements NoticeRepository{
   }
 
   Future<List<Notice>> loadDogLists() async {
-
-    String data = await rootBundle.loadString('assets/data/dog.json');
-    final Map result = json.decode(data);
-    return result['dogs'].map<Notice>( (notice) => new Notice.fromMapDog(notice)).toList();
-
+    final List<Map> result =await NewsApp.dbHelp.queryLearnAll();
+    List<Notice> noties=List<Notice>();
+    for (Map value in result) {
+      Notice notice=new Notice.fromMapDog(value);
+      noties.add(notice);
+    }
+    return noties;
   }
 
   Future<List<Notice>> loadSearch(String query) async {
