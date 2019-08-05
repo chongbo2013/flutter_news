@@ -34,9 +34,12 @@ class IntroNews {
 }
 
 class IntroNewsItem extends StatefulWidget {
+  final callback;
   IntroNewsItem({
     @required this.item,
     @required this.pageVisibility,
+    @required this.callback,
+
   });
 
   final IntroNews item;
@@ -146,8 +149,7 @@ class IntroNewsItemState extends State<IntroNewsItem> {
 
 
   void refreshTab(){
-    HomeView.featuredView.reload();
-
+    widget.callback();
   }
   _buildDogContainer(BuildContext context) {
 

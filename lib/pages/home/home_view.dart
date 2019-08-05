@@ -1,5 +1,4 @@
 import 'package:FlutterNews/pages/featured/dogFeaturedView.dart';
-import 'package:FlutterNews/pages/featured/featured_view.dart';
 import 'package:FlutterNews/pages/home/home_bloc.dart';
 import 'package:FlutterNews/pages/home/home_streams.dart';
 import 'package:FlutterNews/pages/info/info.dart';
@@ -51,7 +50,9 @@ class HomeView extends StatelessWidget {
           var position = snapshot.hasData ? snapshot.data:0;
           if(position==0){
             if(featuredView==null)
-            featuredView=DogFeaturedView();
+            featuredView=DogFeaturedView((){
+
+            });
             return featuredView;
           }else if(position==1){
             return NewsView();

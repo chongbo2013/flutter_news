@@ -1,15 +1,10 @@
 
 
-import 'package:FlutterNews/pages/featured/featured_events.dart';
-import 'package:FlutterNews/pages/featured/featured_bloc.dart';
-import 'package:FlutterNews/pages/featured/featured_streams.dart';
 import 'package:FlutterNews/repository/notice_repository/model/notice.dart';
-import 'package:FlutterNews/repository/notice_repository/notice_repository.dart';
 import 'package:FlutterNews/support/conection/api.dart';
 import 'package:FlutterNews/widgets/erro_conection.dart';
 import 'package:FlutterNews/widgets/pageTransform/intro_page_item.dart';
 import 'package:FlutterNews/widgets/pageTransform/page_transformer.dart';
-import 'package:bsev/bsev.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -18,11 +13,14 @@ import '../../main.dart';
 class DogFeaturedView extends StatefulWidget {
 
   DogFeatureViewState dogFeatureViewState;
+  final callBack;
+  DogFeaturedView(this.callBack);
 
   @override
   DogFeatureViewState createState() {
     // TODO: implement createState
-    dogFeatureViewState=DogFeatureViewState();
+    dogFeatureViewState=DogFeatureViewState(callBack);
+
     return dogFeatureViewState;
   }
 
@@ -33,8 +31,8 @@ class DogFeaturedView extends StatefulWidget {
 }
 
 class DogFeatureViewState extends State<DogFeaturedView>{
-
-
+  final callBack;
+  DogFeatureViewState(this.callBack);
   @override
   void initState() {
     // TODO: implement initState
@@ -78,18 +76,19 @@ class DogFeatureViewState extends State<DogFeaturedView>{
     List _destaque = noticies;
     var length = _destaque.length ;
 
-    final item = IntroNews.fromNotice(noticies[0]);
-    Widget fearured =new IntroNewsItem(
-        item: item, pageVisibility: new PageVisibility(1,0));
-
-
+    Widget fearured =
     PageTransformer(pageViewBuilder: (context, visibilityResolver) {
       return new PageView.builder(
         controller: new PageController(viewportFraction: 0.9),
         itemCount: length,
         itemBuilder: (context, index) {
-
-          return
+          final item = IntroNews.fromNotice(_destaque[index]);
+          final pageVisibility =
+          visibilityResolver.resolvePageVisibility(index);
+          return new IntroNewsItem(
+              item: item, pageVisibility: pageVisibility,callback: (){
+                reload();
+          },);
         },
       );
     });
@@ -113,7 +112,7 @@ class DogFeatureViewState extends State<DogFeaturedView>{
   Map<int, Notice> areadyUses = new Map();
   //重新加载
   void reload(){
-    load();
+    widget.callBack();
   }
   void load(){
 
@@ -134,9 +133,10 @@ class DogFeatureViewState extends State<DogFeaturedView>{
 
           noticies.clear();
           noticies.add(value);
+          showProgress=false;
+          showError=false;
           setState(() {
-             showProgress=false;
-             showError=false;
+
           });
 
           return;

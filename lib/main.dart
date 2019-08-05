@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:FlutterNews/pages/guide/intro_slider_demo.dart';
+import 'package:FlutterNews/pages/home/dog_home_view.dart';
 import 'package:FlutterNews/pages/home/home_view.dart';
 import 'package:FlutterNews/repository/notice_repository/model/notice.dart';
 import 'package:FlutterNews/support/di/inject_bloc.dart';
@@ -122,7 +123,7 @@ class _MyAppState extends State<NewsApp> {
         GlobalWidgetsLocalizations.delegate,
       ],
       localeResolutionCallback: myLocation.resolution,
-      home: HomeView(),
+      home: DogHomeView(),
     );
   }
 }
